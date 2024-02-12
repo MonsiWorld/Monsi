@@ -26,7 +26,7 @@ coverage
 # nyc test coverage
 .nyc_output
 
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+# Grunt intermediate storage (https://gruntjs.org/creating-plugins#storing-task-files)
 .grunt
 
 # Bower dependency directory (https://bower.io/)
@@ -93,9 +93,7 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
+public
 
 # vuepress build output
 .vuepress/dist
@@ -128,3 +126,25 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Truffle & Ganache artifacts for Solidity development
+/build/
+/bin/
+.ganache*
+
+# Solidity artifacts
+/artifacts/
+
+# Hardhat cache
+/cache/
+
+# Editor specific
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Operating System specific
+.DS_Store
+Thumbs.db
+desktop.ini
