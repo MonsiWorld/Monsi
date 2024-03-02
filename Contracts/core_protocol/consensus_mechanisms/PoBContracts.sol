@@ -1,55 +1,62 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./MonsiOwnable.sol";
+/**
+ * @title IMONSI
+ * @dev Basic interface for a MONSI contract.
+ */
+interface IMONSI {
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    event Transfer(address indexed from, address indexed to, uint256 value);
+}
 
-contract PoBContracts is MonsiOwnable {
-    // Event to log the burning of ether and granting of mining rights
-    event TokensBurned(address indexed user, uint256 amount, uint256 miningRights);
+/**
+ * @title PoBContracts
+ * @dev Implements Proof of Burn for the MONSI coin.
+ */
+contract MONSI is IMONSI {
+    mapping(address => uint256) private _balances;
+    uint256 private _totalSupply;
+    address public constant BURN_ADDRESS = 0x000000000000000000000000000000000000dEaD;
 
-    // Mapping to track the mining rights of users
-    mapping(address => uint256) public miningRights;
+    event TokensBurned(address indexed burner, uint256 amount);
 
-    // The rate of mining rights granted per ether burned
-    uint256 public miningRatePerEther;
-
-    constructor(uint256 _miningRatePerEther) {
-        require(_miningRatePerEther > 0, "Mining rate must be greater than zero");
-        miningRatePerEther = _miningRatePerEther;
+    constructor(uint256 initialSupply) {
+        _totalSupply = initialSupply;
+        _balances[msg.sender] = initialSupply;
+        emit Transfer(address(0), msg.sender, initialSupply);
     }
 
-    // Function to allow users to burn ether and gain mining rights
-    function burnTokensForMiningRight() public payable {
-        require(msg.value > 0, "Must burn a non-zero amount of ether");
-
-        uint256 rightsGranted = msg.value * miningRatePerEther;
-        miningRights[msg.sender] += rightsGranted;
-
-        emit TokensBurned(msg.sender, msg.value, rightsGranted);
+    function totalSupply() public view override returns (uint256) {
+        return _totalSupply;
     }
 
-    // Function to update the mining rate
-    function updateMiningRatePerEther(uint256 _newRate) public onlyOwner {
-        require(_newRate > 0, "New rate must be greater than zero");
-        miningRatePerEther = _newRate;
+    function balanceOf(address account) public view override returns (uint256) {
+        return _balances[account];
     }
 
-    // Function to retrieve the mining rights of a user
-    function getMiningRights(address user) public view returns (uint256) {
-        return miningRights[user];
+    function transfer(address recipient, uint256 amount) public override returns (bool) {
+        require(_balances[msg.sender] >= amount, "MONSI: transfer amount exceeds balance");
+        _balances[msg.sender] -= amount;
+        _balances[recipient] += amount;
+        emit Transfer(msg.sender, recipient, amount);
+        return true;
     }
-    
-    // Example function to simulate mining or similar activity
-    function mineBlocks(address miner) public {
-        // Check that the miner has enough mining rights
-        require(miningRights[miner] > 0, "Insufficient mining rights");
-        
-        // Logic to simulate mining or similar activity
-        // This could involve decrementing mining rights, rewarding the miner, etc.
-        
-        // For simplicity, just decrement one mining right per call
-        miningRights[miner] -= 1;
-        
-        // Emit an event or perform additional logic as needed
+
+    /**
+     * @dev Burns a specific amount of tokens.
+     * @param amount amount of tokens to be burned.
+     */
+    function burnTokens(uint256 amount) public {
+        require(amount > 0, "MONSI: Amount to burn must be greater than 0.");
+        require(_balances[msg.sender] >= amount, "MONSIToken: Burn amount exceeds balance.");
+
+        _balances[msg.sender] -= amount;
+        _totalSupply -= amount;
+
+        emit TokensBurned(msg.sender, amount);
+        emit Transfer(msg.sender, BURN_ADDRESS, amount);
     }
 }
