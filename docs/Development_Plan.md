@@ -47,16 +47,36 @@ MonsiBlockchain/
 │   │       ├── QuantumUpgradeManager.sol
 │   │       ├── UpgradeProposal.sol
 │   │       └── UpgradeExecution.sol
-│   └── governance_community/
-│       ├── Voting_System.sol
-│       ├── Proposal_Management.sol
-│       ├── Governance.sol
-│       ├── treasury_management/
-│       │   ├── Treasury.sol
-│       │   ├── FundingAllocation.sol
-│       │   └── TreasuryDistribution.sol
-│       └── dispute_resolution/
-│           └── DisputeResolution.sol
+│   ├── governance_community/
+│   │   ├── Voting_System.sol
+│   │   ├── Proposal_Management.sol
+│   │   ├── Governance.sol
+│   │   ├── treasury_management/
+│   │   │   ├── Treasury.sol
+│   │   │   ├── FundingAllocation.sol
+│   │   │   └── TreasuryDistribution.sol
+│   │   └── dispute_resolution/
+│   │       └── DisputeResolution.sol
+│   ├── token_economics/
+│   │   ├── MonsiToken.sol
+│   │   ├── TokenMinting.sol
+│   │   └── TokenBurning.sol
+│   ├── utility_services/
+│   │   ├── Wallet.sol
+│   │   ├── PaymentGateway.sol
+│   │   └── OracleService.sol
+│   └── dapps_integration/
+│       ├── DAppRegistry.sol
+│       ├── NFTMarketplace.sol
+│       └── DecentralizedExchange.sol
+├── public/
+│   ├── index.html
+│   └── js/
+│       └── app.js
+├── server/
+│   ├── index.js
+│   └── api/
+│       └── blockchainApi.js
 ├── docs/
 │   ├── Whitepaper.md
 │   ├── Development_Plan.md
