@@ -1,0 +1,137 @@
+### MONSI Blockchain API Documentation
+
+#### Overview
+
+The MONSI Blockchain API provides developers with access to the blockchain's core features, enabling the creation of decentralized applications, transaction management, and access to blockchain data. This documentation outlines the available endpoints and their usage.
+
+#### Base URL
+
+`https://api.monsi.io/v1`
+
+#### Authentication
+
+Requests to the MONSI API may require authentication. API keys are provided upon developer registration. Include your API key in the header of your requests:
+
+```
+Authorization: Bearer YOUR_API_KEY_HERE
+```
+
+#### Endpoints
+
+##### 1. Get Block Information
+
+- **Endpoint:** `/block/{blockNumber}`
+- **Method:** `GET`
+- **Description:** Retrieves information about a specific block.
+- **Parameters:**
+  - `blockNumber`: The number of the block to retrieve.
+- **Response:**
+  ```json
+  {
+    "blockNumber": 12345,
+    "timestamp": "2024-03-02T12:00:00Z",
+    "transactions": 10,
+    "miner": "0x...",
+    "reward": "2.5 MONSI",
+    "size": "1 MB"
+  }
+  ```
+
+##### 2. Submit Transaction
+
+- **Endpoint:** `/transaction/submit`
+- **Method:** `POST`
+- **Description:** Submits a new transaction to the blockchain.
+- **Body:**
+  ```json
+  {
+    "from": "0x...",
+    "to": "0x...",
+    "value": "100 MONSI",
+    "gas": 21000,
+    "data": "0x...",
+    "nonce": 10
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "transactionHash": "0x..."
+  }
+  ```
+
+##### 3. Get Account Balance
+
+- **Endpoint:** `/account/balance/{address}`
+- **Method:** `GET`
+- **Description:** Retrieves the balance of the specified account.
+- **Parameters:**
+  - `address`: The address of the account.
+- **Response:**
+  ```json
+  {
+    "address": "0x...",
+    "balance": "1000 MONSI"
+  }
+  ```
+
+##### 4. Call Smart Contract
+
+- **Endpoint:** `/contract/call`
+- **Method:** `POST`
+- **Description:** Calls a smart contract method (read-only, does not submit a transaction).
+- **Body:**
+  ```json
+  {
+    "contractAddress": "0x...",
+    "methodName": "balanceOf",
+    "params": {
+      "account": "0x..."
+    }
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "data": "1000"
+  }
+  ```
+
+##### 5. Deploy Smart Contract
+
+- **Endpoint:** `/contract/deploy`
+- **Method:** `POST`
+- **Description:** Deploys a new smart contract to the blockchain.
+- **Body:**
+  ```json
+  {
+    "from": "0x...",
+    "gas": 1000000,
+    "data": "0x..."
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "contractAddress": "0x...",
+    "transactionHash": "0x..."
+  }
+  ```
+
+#### Error Handling
+
+API responses will include a status code that indicates the success or failure of the request. Common status codes include:
+
+- `200 OK`: The request was successful.
+- `400 Bad Request`: The request was malformed or invalid.
+- `401 Unauthorized`: Authentication failed or was not provided.
+- `404 Not Found`: The requested resource was not found.
+- `500 Internal Server Error`: An error occurred on the server.
+
+#### Rate Limiting
+
+The API is subject to rate limiting to ensure fair usage. Exceeding the rate limit will result in a `429 Too Many Requests` status code. Developers are advised to implement appropriate retry mechanisms.
+
+### Conclusion
+
+This documentation provides a foundational overview of interacting with the MONSI blockchain via its API. Developers are encouraged to explore further functionalities and integrate MONSI's capabilities into their applications. For additional information or support, please visit some portal or contact someone.
