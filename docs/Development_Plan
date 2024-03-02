@@ -41,8 +41,6 @@ MonsiBlockchain/
 │   │   │   ├── SecurityAuditCoordinator.sol
 │   │   │   ├── AuditRequest.sol
 │   │   │   └── AuditVerification.sol
-│   │   ├── zero_knowledge_proofs/
-│   │   │   └── ZKPManager.sol
 │   │   └── quantum_resistant_upgrades/
 │   │       ├── QuantumUpgradeManager.sol
 │   │       ├── UpgradeProposal.sol
@@ -69,19 +67,10 @@ MonsiBlockchain/
 │       ├── DAppRegistry.sol
 │       ├── NFTMarketplace.sol
 │       └── DecentralizedExchange.sol
-├── public/
-│   ├── index.html
-│   └── js/
-│       └── app.js
-├── server/
-│   ├── index.js
-│   └── api/
-│       └── blockchainApi.js
 ├── docs/
 │   ├── Whitepaper.md
 │   ├── Development_Plan.md
 │   ├── API_Documentation.md
-│   ├── APIReference.md
 │   ├── ArchitectureOverview.md
 │   ├── TechnicalDocumentation.md
 │   └── DeveloperGuide.md
@@ -122,6 +111,14 @@ MonsiBlockchain/
 │   ├── MonsiOwnable.sol
 │   ├── MonsiAiLib.sol
 │   └── MonsiConsensusLib.sol
+├── public/
+│   ├── index.html
+│   └── js/
+│       └── app.js
+├── server/
+│   ├── index.js
+│   └── api/
+│       └── blockchainApi.js
 ├── config/
 │   ├── NetworkConfig.json
 │   ├── ContractConfig.json
@@ -134,6 +131,6 @@ MonsiBlockchain/
 │   └── records/
 │       ├── DeploymentRecordMainnet.json
 │       └── DeploymentRecordTestnet.json
-├── README.md
 ├── .gitignore
+├── README.md
 └── LICENSE
