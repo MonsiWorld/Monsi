@@ -116,9 +116,12 @@ MonsiBlockchain/
 │   ├── IShard.sol
 │   └── ICrossChain.sol
 ├── lib/
-│   ├── Utilities.sol
-│   ├── MathLib.sol
-│   └── SecurityLib.sol
+│   ├── MonsiUtilities.sol
+│   ├── MonsiMathLib.sol
+│   ├── MonsiSecurityLib.sol
+│   ├── MonsiOwnable.sol
+│   ├── MonsiAiLib.sol
+│   └── MonsiConsensusLib.sol
 ├── config/
 │   ├── NetworkConfig.json
 │   ├── ContractConfig.json
