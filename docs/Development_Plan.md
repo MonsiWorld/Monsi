@@ -1,78 +1,10 @@
-Monsi blockchain is as described:
-/MonsiBlockchain
-    /contracts
-        /core_protocol
-            /consensus_mechanisms
-                - HybridConsensus.sol // Consolidate consensus mechanisms where possible for modularity
-            /validator_management
-                - ValidatorRegistry.sol // Central registry for validator operations
-            /sharding_control
-                - ShardingManager.sol // Unified management for shard operations
-            /cross_shard_communication
-                - CrossShardRouter.sol // Central routing logic for cross-shard messages
-            /cross_chain_interoperability
-                - CrossChainManager.sol // Aggregate cross-chain interactions
-        /security_compliance
-            /identity_access_management
-                - IdentityManager.sol // Unified identity management
-            /security_audit
-                - SecurityAuditCoordinator.sol // Central coordination for audits
-            /zero_knowledge_proofs
-                - ZKPManager.sol // Management and utilities for ZKP
-            /quantum_resistant_upgrades
-                - QuantumUpgradeManager.sol // Handles upgrade proposals and executions
-        /governance_community
-            - Governance.sol // Unified governance contract
-            /treasury_management
-                - Treasury.sol // Centralized treasury management
-            /dispute_resolution
-                - DisputeResolution.sol // Main contract for handling disputes
-        /economic_incentive_mechanisms
-            - EconomicModel.sol // Central contract for managing economic incentives
-        /utility_services
-            - UtilityServices.sol // Aggregator for various utility services
-            /oracles
-                - OracleManager.sol // Central manager for oracle services
-            /nft_management
-                - NFTFactory.sol // Factory pattern for NFT creation
-            /data_storage
-                - StorageManager.sol // Unified data storage management
-    /test
-        /integration
-            - IntegrationTests.sol // Integration tests for contract interaction
-        /unit
-            - UnitTests.sol // Unit tests for individual contracts
-    /docs
-        - APIReference.md // Detailed API reference
-        - ArchitectureOverview.md // In-depth architecture overview
-    /scripts
-        - SetupLocalEnvironment.js // Script to setup a local development environment
-        - SeedTestData.js // Seed the development environment with test data
-    /migrations
-        - 2_deploy_utilities.js // Additional migration script for utility contracts
-    /lib
-        - SecurityLib.sol // Security-related utilities and libraries
-    /interfaces
-        - IMonsiService.sol // Interface for Monsi services
-    /helpers
-        - DeploymentHelper.js // Helps with contract deployment processes
-        - TestSetupHelper.js // Setup test environments and scenarios
-    /config
-        - TruffleConfig.js // Advanced configuration for Truffle projects
-        - HardhatConfig.js // Advanced configuration for Hardhat projects
-    /deployments
-        /scripts
-            - DeployToMainnet.js // Script for mainnet deployment
-            - DeployToTestnet.js // Script for testnet deployment
-        /records
-            - DeploymentRecordMainnet.json // Record of mainnet deployments
-            - DeploymentRecordTestnet.json // Record of testnet deployments
-
-
+# Make HAK Like This
 /MonsiBlockchain
     ├── /contracts
     │   ├── /core_protocol
     │   │   ├── /consensus_mechanisms
+    │   │   │   ├── AI_Adaptive_Consensus.sol
+    │   │   │   ├── HybridConsensus.sol
     │   │   │   ├── DPoSContracts.sol
     │   │   │   ├── DPoWContracts.sol
     │   │   │   ├── DPoAContracts.sol
@@ -80,74 +12,106 @@ Monsi blockchain is as described:
     │   │   │   ├── PoRContracts.sol
     │   │   │   └── PoBContracts.sol
     │   │   ├── /validator_management
+    │   │   │   ├── ValidatorRegistry.sol
     │   │   │   ├── ValidatorRegistration.sol
     │   │   │   ├── StakingRewards.sol
     │   │   │   ├── ValidatorPenalty.sol
     │   │   │   └── ValidatorVoting.sol
     │   │   ├── /sharding_control
+    │   │   │   ├── ShardingManager.sol
     │   │   │   ├── ShardCreation.sol
     │   │   │   ├── ShardManagement.sol
     │   │   │   └── ShardRegistry.sol
     │   │   ├── /cross_shard_communication
+    │   │   │   ├── CrossShardRouter.sol
     │   │   │   ├── InterShardMessage.sol
     │   │   │   └── CrossShardTransaction.sol
     │   │   └── /cross_chain_interoperability
+    │   │       ├── CrossChainManager.sol
     │   │       ├── AssetLocking.sol
     │   │       ├── AssetRelease.sol
     │   │       └── InteroperabilityVerification.sol
     │   ├── /security_compliance
+    │   │   ├── Quantum_Resistant_Cryptography.sol
+    │   │   ├── Zero_Knowledge_Proofs.sol
     │   │   ├── /identity_access_management
+    │   │   │   ├── IdentityManager.sol
     │   │   │   ├── UserIdentity.sol
     │   │   │   └── AccessControl.sol
     │   │   ├── /security_audit
+    │   │   │   ├── SecurityAuditCoordinator.sol
     │   │   │   ├── AuditRequest.sol
     │   │   │   └── AuditVerification.sol
     │   │   ├── /zero_knowledge_proofs
-    │   │   │   └── ZKPVerification.sol
+    │   │   │   └── ZKPManager.sol
     │   │   └── /quantum_resistant_upgrades
+    │   │       ├── QuantumUpgradeManager.sol
     │   │       ├── UpgradeProposal.sol
     │   │       └── UpgradeExecution.sol
     │   └── /governance_community
-    │       ├── /governance_voting
-    │       │   ├── ProposalSubmission.sol
-    │       │   ├── Voting.sol
-    │       │   └── ProposalExecution.sol
+    │       ├── Voting_System.sol
+    │       ├── Proposal_Management.sol
+    │       ├── Governance.sol
     │       ├── /treasury_management
+    │       │   ├── Treasury.sol
     │       │   ├── FundingAllocation.sol
     │       │   └── TreasuryDistribution.sol
     │       └── /dispute_resolution
-    │           └── DisputeResolution.sol
-    ├── /test
-    │   ├── TestDPoS.sol
-    │   ├── TestValidatorRegistration.sol
-    │   ├── TestShardCreation.sol
-    │   ├── TestInterShardMessage.sol
-    │   └── TestAssetLocking.sol
+    │           ├── DisputeResolution.sol
     ├── /docs
     │   ├── Whitepaper.md
+    │   ├── Development_Plan.md
+    │   ├── API_Documentation.md
+    │   ├── APIReference.md
+    │   ├── ArchitectureOverview.md
     │   ├── TechnicalDocumentation.md
     │   └── DeveloperGuide.md
+    ├── /test
+    │   ├── /unit_tests
+    │   │   ├── TestDPoS.sol
+    │   │   ├── TestValidatorRegistration.sol
+    │   │   ├── TestShardCreation.sol
+    │   │   ├── TestInterShardMessage.sol
+    │   │   └── TestAssetLocking.sol
+    │   └── /integration_tests
+    │       └── IntegrationTests.sol
     ├── /scripts
-    │   ├── DeploymentScript.js
-    │   └── InteractionScript.js
+    │   ├── Deployment_Scripts
+    │   │   ├── SetupLocalEnvironment.js
+    │   │   ├── SeedTestData.js
+    │   │   ├── DeploymentScript.js
+    │   │   └── InteractionScript.js
+    │   └── Security_Audit_Tools
+    │       └── AuditTools.js
     ├── /migrations
-    │   └── 1_initial_migration.js
-    ├── /lib
-    │   ├── Utilities.sol
-    │   └── MathLib.sol
+    │   ├── 1_initial_migration.js
+    │   └── 2_deploy_utilities.js
+    ├── /helpers
+    │   ├── DeploymentHelper.js
+    │   ├── TestSetupHelper.js
+    │   ├── ContractHelper.sol
+    │   └── TestHelper.sol
     ├── /interfaces
+    │   ├── IMonsiService.sol
     │   ├── IValidator.sol
     │   ├── IShard.sol
     │   └── ICrossChain.sol
-    ├── /helpers
-    │   ├── TestHelper.sol
-    │   └── ContractHelper.sol
+    ├── /lib
+    │   ├── Utilities.sol
+    │   ├── MathLib.sol
+    │   └── SecurityLib.sol
     ├── /config
     │   ├── NetworkConfig.json
-    │   └── ContractConfig.json
+    │   ├── ContractConfig.json
+    │   ├── TruffleConfig.js
+    │   └── HardhatConfig.js
     ├── /deployments
-    │   ├── Mainnet.json
-    │   └── Testnet.json
+    │   ├── /scripts
+    │   │   ├── DeployToMainnet.js
+    │   │   └── DeployToTestnet.js
+    │   └── /records
+    │       ├── DeploymentRecordMainnet.json
+    │       └── DeploymentRecordTestnet.json
     ├── README.md
     ├── .gitignore
     └── LICENSE
