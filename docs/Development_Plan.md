@@ -1,4 +1,4 @@
-Monsi blockchain is as described in previous message, with this roguh structure:
+Monsi blockchain is as described:
 /MonsiBlockchain
     /contracts
         /core_protocol
