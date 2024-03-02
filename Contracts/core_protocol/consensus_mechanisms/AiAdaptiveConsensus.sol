@@ -1,57 +1,75 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// Assume ConsensusLib and AILib are defined in the same way as previously shown
+/**
+ * OracleInterface is assumed to be an external contract interface
+ * that MonsiBlockchain's AIAdaptiveConsensus contract will call to fetch
+ * optimized consensus parameters. This interface must be implemented
+ * by the actual Oracle contract.
+ */
+interface OracleInterface {
+    function getOptimalParameters() external returns (uint256, uint256);
+}
 
-contract Ownable {
-    address private _owner;
+/**
+ * @title AIAdaptiveConsensus
+ * @dev Implements an AI-driven adaptive consensus mechanism for the MonsiBlockchain.
+ * This contract interacts with an external Oracle to dynamically adjust consensus parameters,
+ * optimizing for network efficiency and security.
+ */
+contract AIAdaptiveConsensus {
+    uint256 public blockTime;
+    uint256 public difficulty;
+    address private admin;
+    OracleInterface public oracle;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event ConsensusParameterChanged(string parameter, uint256 value);
 
-    constructor() {
-        _owner = msg.sender;
-        emit OwnershipTransferred(address(0), _owner);
-    }
-
-    function owner() public view returns (address) {
-        return _owner;
-    }
-
-    modifier onlyOwner() {
-        require(owner() == msg.sender, "Ownable: caller is not the owner");
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "AIAdaptiveConsensus: Only the admin can perform this action.");
         _;
     }
 
-    function transferOwnership(address newOwner) public onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
-        emit OwnershipTransferred(_owner, newOwner);
-        _owner = newOwner;
-    }
-}
-
-contract AI_Adaptive_Consensus is Ownable {
-    using ConsensusLib for ConsensusLib.ConsensusParameters;
-
-    // Event to log consensus parameter changes
-    event ConsensusParametersUpdated(uint newBlockTime, uint newValidatorSetSize);
-
-    ConsensusLib.ConsensusParameters private parameters;
-
-    constructor(uint _initialBlockTime, uint _initialValidatorSetSize) {
-        parameters.updateParameters(_initialBlockTime, _initialValidatorSetSize);
+    constructor(uint256 _initialBlockTime, uint256 _initialDifficulty, address _oracleAddress) {
+        require(_oracleAddress != address(0), "AIAdaptiveConsensus: Oracle address cannot be the zero address.");
+        admin = msg.sender;
+        blockTime = _initialBlockTime;
+        difficulty = _initialDifficulty;
+        oracle = OracleInterface(_oracleAddress);
     }
 
-    function updateConsensusParameters(uint _newBlockTime, uint _newValidatorSetSize) public onlyOwner {
-        parameters.updateParameters(_newBlockTime, _newValidatorSetSize);
-        emit ConsensusParametersUpdated(_newBlockTime, _newValidatorSetSize);
+    function adjustBlockTime(uint256 _newBlockTime) public onlyAdmin {
+        require(_newBlockTime > 0, "AIAdaptiveConsensus: Block time must be greater than 0.");
+        blockTime = _newBlockTime;
+        emit ConsensusParameterChanged("blockTime", _newBlockTime);
     }
 
-    function simulateAIAdjustment() external onlyOwner {
-        (uint newBlockTime, uint newValidatorSetSize) = AILib.simulateDecision(parameters.blockTime, parameters.validatorSetSize);
-        updateConsensusParameters(newBlockTime, newValidatorSetSize);
+    function adjustDifficulty(uint256 _newDifficulty) public onlyAdmin {
+        require(_newDifficulty > 0, "AIAdaptiveConsensus: Difficulty must be greater than 0.");
+        difficulty = _newDifficulty;
+        emit ConsensusParameterChanged("difficulty", _newDifficulty);
     }
 
-    function getConsensusParameters() public view returns (uint, uint) {
-        return (parameters.blockTime, parameters.validatorSetSize);
+    /**
+     * @dev Fetches and applies AI-driven parameter adjustments from an Oracle.
+     */
+    function aiAdjustParameters() external onlyAdmin {
+        (uint256 _newBlockTime, uint256 _newDifficulty) = oracle.getOptimalParameters();
+
+        if (_newBlockTime != blockTime && _newBlockTime > 0) {
+            adjustBlockTime(_newBlockTime);
+        }
+        if (_newDifficulty != difficulty && _newDifficulty > 0) {
+            adjustDifficulty(_newDifficulty);
+        }
+    }
+
+    /**
+     * @dev Allows changing the Oracle address.
+     * @param _newOracleAddress The address of the new Oracle.
+     */
+    function changeOracleAddress(address _newOracleAddress) external onlyAdmin {
+        require(_newOracleAddress != address(0), "AIAdaptiveConsensus: Oracle address cannot be the zero address.");
+        oracle = OracleInterface(_newOracleAddress);
     }
 }
