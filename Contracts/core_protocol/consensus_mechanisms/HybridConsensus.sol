@@ -1,67 +1,86 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./MonsiConsensusLib.sol"; // Assuming this library is defined to manage consensus parameters
-import "./MonsiOwnable.sol";
+/**
+ * @title HybridConsensus
+ * @dev Extended version to include simulated PoW reward logic and admin functionalities.
+ */
+contract HybridConsensus {
+    address public admin;
+    uint256 public stakeRequirement;
+    uint256 public currentDifficulty;
+    mapping(address => uint256) public stakes;
 
-contract HybridConsensus is MonsiOwnable {
-    using MonsiConsensusLib for MonsiConsensusLib.ConsensusParameters;
+    // Adding a simple reward mechanism
+    uint256 public constant REWARD = 1 ether;
+    mapping(address => uint256) public rewards;
 
-    MonsiConsensusLib.ConsensusParameters private consensusParameters;
+    event StakeDeposited(address indexed staker, uint256 amount);
+    event StakeWithdrawn(address indexed staker, uint256 amount);
+    event WorkValidated(address indexed worker, uint256 difficulty, uint256 reward);
+    event DifficultyAdjusted(uint256 newDifficulty);
+    event StakeRequirementAdjusted(uint256 newStakeRequirement);
 
-    // Events for logging changes in the consensus mechanism
-    event PoWParametersUpdated(uint difficulty, uint reward);
-    event PoSParametersUpdated(uint minimumStake, uint reward);
-
-    // PoW and PoS parameters
-    struct PoWParameters {
-        uint difficulty; // Difficulty of the Proof of Work
-        uint reward; // Mining reward
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "HybridConsensus: Only admin can perform this action.");
+        _;
     }
 
-    struct PoSParameters {
-        uint minimumStake; // Minimum amount of tokens required to participate in staking
-        uint reward; // Staking reward
+    constructor(uint256 _stakeRequirement, uint256 _initialDifficulty) {
+        admin = msg.sender;
+        stakeRequirement = _stakeRequirement;
+        currentDifficulty = _initialDifficulty;
     }
 
-    PoWParameters public powParameters;
-    PoSParameters public posParameters;
-
-    constructor(uint _initialDifficulty, uint _initialPoWReward, uint _initialMinimumStake, uint _initialPoSReward) {
-        powParameters = PoWParameters(_initialDifficulty, _initialPoWReward);
-        posParameters = PoSParameters(_initialMinimumStake, _initialPoSReward);
+    function depositStake() external payable {
+        require(msg.value >= stakeRequirement, "HybridConsensus: Deposit does not meet the stake requirement.");
+        stakes[msg.sender] += msg.value;
+        emit StakeDeposited(msg.sender, msg.value);
     }
 
-    // Update the PoW consensus parameters
-    function updatePoWParameters(uint _difficulty, uint _reward) public onlyOwner {
-        powParameters.difficulty = _difficulty;
-        powParameters.reward = _reward;
-        emit PoWParametersUpdated(_difficulty, _reward);
+    function withdrawStake(uint256 amount) external {
+        require(stakes[msg.sender] >= amount, "HybridConsensus: Insufficient stake.");
+        stakes[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
+        emit StakeWithdrawn(msg.sender, amount);
     }
 
-    // Update the PoS consensus parameters
-    function updatePoSParameters(uint _minimumStake, uint _reward) public onlyOwner {
-        posParameters.minimumStake = _minimumStake;
-        posParameters.reward = _reward;
-        emit PoSParametersUpdated(_minimumStake, _reward);
+    function validateWork(uint256 nonce) external {
+        bytes32 hash = keccak256(abi.encodePacked(block.number, msg.sender, nonce));
+        bytes32 target = bytes32(type(uint256).max >> currentDifficulty);
+
+        require(hash < target, "HybridConsensus: Work does not meet the difficulty requirement.");
+        
+        // Simulated reward distribution logic
+        rewards[msg.sender] += REWARD;
+        emit WorkValidated(msg.sender, currentDifficulty, REWARD);
     }
 
-    // Example function to simulate mining a block using PoW
-    function mineBlock(uint nonce) public returns (bool) {
-        // This is a simplified simulation and does not perform actual PoW mining
-        // In a real implementation, there would be a validation of work against the difficulty
-        return true; // Simplification for example purposes
+    // Allows miners to claim their rewards
+    function claimReward() external {
+        uint256 reward = rewards[msg.sender];
+        require(reward > 0, "HybridConsensus: No rewards to claim.");
+
+        rewards[msg.sender] = 0;
+        payable(msg.sender).transfer(reward);
     }
 
-    // Example function to simulate staking for PoS
-    function stakeTokens(uint amount) public returns (bool) {
-        // This is a simplified simulation and does not stake actual tokens
-        // In a real implementation, there would be a transfer of tokens to a staking contract
-        require(amount >= posParameters.minimumStake, "Insufficient amount for staking");
-        return true; // Simplification for example purposes
+    function adjustDifficulty(uint256 _newDifficulty) external onlyAdmin {
+        currentDifficulty = _newDifficulty;
+        emit DifficultyAdjusted(_newDifficulty);
     }
 
-    // Functions to manage and validate consensus would be added here
-    // This could include mechanisms for validating blocks, distributing rewards, and managing stakers and miners
+    function adjustStakeRequirement(uint256 _newStakeRequirement) external onlyAdmin {
+        stakeRequirement = _newStakeRequirement;
+        emit StakeRequirementAdjusted(_newStakeRequirement);
+    }
+
+    // Transfer admin role to a new address
+    function transferAdminRole(address _newAdmin) external onlyAdmin {
+        require(_newAdmin != address(0), "HybridConsensus: New admin address is the zero address.");
+        admin = _newAdmin;
+    }
+
+    // Fallback function to accept Ether from claimReward refunds
+    receive() external payable {}
 }
-
