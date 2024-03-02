@@ -1,42 +1,49 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./MonsiOwnable.sol";
-
-contract PoHContracts is MonsiOwnable {
-    // Structure to represent an event in history
+/**
+ * @title Proof of History (PoH) Contracts
+ * @dev Simulates the Proof of History concept by recording actions with timestamps on Ethereum.
+ */
+contract PoHContracts {
     struct HistoricalEvent {
-        uint256 timestamp;
-        bytes32 dataHash; // Hash of the data representing the event
-        string description; // A brief description of the event
+        bytes32 dataHash; // Hash representing the event data
+        uint256 timestamp; // Block timestamp when the event was recorded
     }
 
-    // Array to store historical events
     HistoricalEvent[] public history;
 
-    // Event to log the addition of a new historical event
-    event HistoricalEventAdded(uint256 indexed eventIndex, uint256 timestamp, bytes32 dataHash, string description);
+    event EventRecorded(bytes32 indexed dataHash, uint256 indexed timestamp);
 
-    // Function to add a new event to the history
-    function addHistoricalEvent(bytes32 _dataHash, string memory _description) public onlyOwner {
-        uint256 eventIndex = history.length;
-        history.push(HistoricalEvent({
-            timestamp: block.timestamp,
-            dataHash: _dataHash,
-            description: _description
-        }));
-
-        emit HistoricalEventAdded(eventIndex, block.timestamp, _dataHash, _description);
+    /**
+     * @dev Records an event in history with the current block timestamp.
+     * @param dataHash Hash of the data representing the event.
+     */
+    function recordEvent(bytes32 dataHash) external {
+        history.push(HistoricalEvent(dataHash, block.timestamp));
+        emit EventRecorded(dataHash, block.timestamp);
     }
 
-    // Function to retrieve a historical event by index
-    function getHistoricalEvent(uint256 _index) public view returns (HistoricalEvent memory) {
-        require(_index < history.length, "Invalid event index");
-        return history[_index];
+    /**
+     * @dev Verifies if an event with the given hash was recorded at a specific timestamp.
+     * @param dataHash Hash of the data representing the event.
+     * @param timestamp Timestamp when the event is claimed to have occurred.
+     * @return bool True if the event exists with the exact timestamp, false otherwise.
+     */
+    function verifyEvent(bytes32 dataHash, uint256 timestamp) external view returns (bool) {
+        for (uint256 i = 0; i < history.length; i++) {
+            if (history[i].dataHash == dataHash && history[i].timestamp == timestamp) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    // Function to get the total number of historical events recorded
-    function getTotalEvents() public view returns (uint256) {
+    /**
+     * @dev Returns the total number of recorded events in history.
+     * @return uint256 Total number of events.
+     */
+    function getTotalEvents() external view returns (uint256) {
         return history.length;
     }
 }
