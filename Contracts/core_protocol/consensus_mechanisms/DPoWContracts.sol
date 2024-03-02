@@ -1,72 +1,93 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./MonsiOwnable.sol";
-
-contract DPoWContracts is MonsiOwnable {
-    // Structure to represent a mining job
-    struct MiningJob {
-        address delegate; // Address of the stakeholder delegating the job
-        uint256 difficulty; // Difficulty level of the job
-        bool completed; // Whether the job is completed
+contract DPoWContracts {
+    struct Delegate {
+        bool isAuthorized;
+        uint256 workCount; // Number of successful work submissions
     }
 
-    // Mapping of miner addresses to their assigned mining jobs
-    mapping(address => MiningJob) public miningJobs;
+    address public admin;
+    mapping(address => Delegate) public delegates;
+    uint256 public currentDifficulty; // Simplified difficulty representation
 
-    // Mapping to track rewards earned by miners
-    mapping(address => uint256) public minerRewards;
+    event DelegateAuthorized(address indexed delegate);
+    event WorkSubmitted(address indexed delegate, uint256 nonce, bool isValid);
+    event DifficultyAdjusted(uint256 newDifficulty);
 
-    // Event to log job delegation
-    event JobDelegated(address indexed miner, uint256 difficulty);
-
-    // Event to log job completion
-    event JobCompleted(address indexed miner, uint256 reward);
-
-    // Function for stakeholders to delegate mining jobs to miners
-    function delegateJob(address miner, uint256 difficulty) public onlyOwner {
-        require(miningJobs[miner].delegate == address(0), "Miner already has a job assigned");
-        miningJobs[miner] = MiningJob({
-            delegate: msg.sender,
-            difficulty: difficulty,
-            completed: false
-        });
-
-        emit JobDelegated(miner, difficulty);
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "DPoWContracts: Only admin can perform this action.");
+        _;
     }
 
-    // Function for miners to submit completed jobs
-    function submitJobCompletion(address miner) public {
-        MiningJob storage job = miningJobs[miner];
-        require(msg.sender == miner, "Only the assigned miner can submit job completion");
-        require(job.delegate != address(0), "No job assigned to the miner");
-        require(!job.completed, "Job already completed");
-
-        job.completed = true;
-        uint256 reward = calculateReward(job.difficulty);
-        minerRewards[miner] += reward;
-
-        emit JobCompleted(miner, reward);
+    modifier onlyAuthorizedDelegate() {
+        require(delegates[msg.sender].isAuthorized, "DPoWContracts: Not an authorized delegate.");
+        _;
     }
 
-    // Function to calculate the reward based on job difficulty
-    // This is a simplified reward calculation
-    function calculateReward(uint256 difficulty) private pure returns (uint256) {
-        return difficulty * 1 ether; // Example calculation
+    constructor(uint256 _initialDifficulty) {
+        admin = msg.sender;
+        currentDifficulty = _initialDifficulty;
     }
 
-    // Function for miners to claim their rewards
-    function claimReward() public {
-        uint256 reward = minerRewards[msg.sender];
-        require(reward > 0, "No rewards to claim");
-
-        payable(msg.sender).transfer(reward);
-        minerRewards[msg.sender] = 0;
+    // Admin authorizes a delegate to submit work
+    function authorizeDelegate(address _delegate) external onlyAdmin {
+        delegates[_delegate].isAuthorized = true;
+        emit DelegateAuthorized(_delegate);
     }
 
-    // Function to deposit ether into the contract for rewards
-    function depositRewards() public payable onlyOwner {}
+    // Delegate submits their proof of work (nonce), which is a simplified validation
+    function submitWork(uint256 nonce) external onlyAuthorizedDelegate {
+        bool isValid = validateWork(nonce);
+        if (isValid) {
+            delegates[msg.sender].workCount += 1;
+        }
+        emit WorkSubmitted(msg.sender, nonce, isValid);
+    }
 
-    // Fallback function to accept Ether deposits
-    receive() external payable {}
+    // Adjust the difficulty, simulating dynamic network conditions
+    function adjustDifficulty(uint256 _newDifficulty) external onlyAdmin {
+        currentDifficulty = _newDifficulty;
+        emit DifficultyAdjusted(_newDifficulty);
+    }
+
+    // Simplified work validation based on current difficulty
+    function validateWork(uint256 nonce) internal view returns (bool) {
+        // This is a highly simplified placeholder for real PoW validation logic
+        uint256 hash = uint256(keccak256(abi.encodePacked(nonce))) % 1000;
+        return hash < currentDifficulty;
+    }
+    
+    uint256 private nonceChallenge;
+    uint256 public constant MAX_DIFFICULTY = 10**18; // Max difficulty setting for scaling
+    
+    // Function to adjust the nonce challenge for the next work submission
+    function updateNonceChallenge() internal {
+        // Pseudo-random update of the challenge based on block information
+        nonceChallenge = uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty, nonceChallenge))) % MAX_DIFFICULTY;
+    }
+
+    // Adjust the difficulty, simulating dynamic network conditions
+    // Updated to also refresh the nonce challenge
+    function adjustDifficulty(uint256 _newDifficulty) external onlyAdmin {
+        require(_newDifficulty <= MAX_DIFFICULTY, "DPoWContracts: Difficulty exceeds maximum.");
+        currentDifficulty = _newDifficulty;
+        updateNonceChallenge(); // Ensure a new challenge on difficulty adjustment
+        emit DifficultyAdjusted(_newDifficulty);
+    }
+
+    // Improved work validation based on current difficulty and a nonce challenge
+    function validateWork(uint256 nonce) internal returns (bool) {
+        // Enhanced pseudo-random challenge check
+        uint256 hash = uint256(keccak256(abi.encodePacked(nonce, nonceChallenge)));
+
+        // The valid hash range is adjusted dynamically based on the currentDifficulty
+        bool isValid = hash % MAX_DIFFICULTY < currentDifficulty;
+
+        if (isValid) {
+            updateNonceChallenge(); // Update challenge for the next submission
+        }
+
+        return isValid;
+    }
 }
