@@ -1,80 +1,76 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// A simplified DPoS contract for educational purposes
 contract DPoSContracts {
-    // Define a struct for validator information
-    struct Validator {
-        address validatorAddress;
-        uint256 stake;
+    struct Delegate {
         uint256 voteCount;
-        bool isActive;
+        bool isDelegate;
+        uint256 lastBlockNumber; // Simulated last block "created"
     }
 
-    // State variables
-    address public owner;
-    Validator[] public validators;
-    mapping(address => uint256) public validatorIndexes;
-    mapping(address => address) public votes; // voterAddress => validatorAddress
+    address public admin;
+    mapping(address => Delegate) public delegates;
+    mapping(address => address) public voterToDelegate;
+    mapping(address => uint256) public stakes;
 
-    // Events
-    event ValidatorRegistered(address indexed validatorAddress);
-    event ValidatorVoted(address indexed voter, address indexed validatorAddress, uint256 voteCount);
-    event ValidatorUnregistered(address indexed validatorAddress);
+    uint256 public minimumStakeRequirement;
 
-    // Modifiers
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only the contract owner can perform this action.");
+    event DelegateAdded(address indexed delegate);
+    event VoteCasted(address indexed voter, address indexed delegate, uint256 votes);
+    event VoteRevoked(address indexed voter, address indexed delegate, uint256 votes);
+    event StakeDeposited(address indexed staker, uint256 amount);
+    event StakeWithdrawn(address indexed staker, uint256 amount);
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin can perform this action.");
         _;
     }
 
-    modifier onlyValidator() {
-        require(validatorIndexes[msg.sender] != 0, "Only registered validators can perform this action.");
-        _;
+    constructor(uint256 _minimumStakeRequirement) {
+        admin = msg.sender;
+        minimumStakeRequirement = _minimumStakeRequirement;
     }
 
-    constructor() {
-        owner = msg.sender;
+    function addDelegate(address _delegate) external onlyAdmin {
+        require(!delegates[_delegate].isDelegate, "Address is already a delegate.");
+        delegates[_delegate].isDelegate = true;
+        delegates[_delegate].voteCount = 0;
+        emit DelegateAdded(_delegate);
     }
 
-    // Register a new validator
-    function registerValidator() external {
-        require(validatorIndexes[msg.sender] == 0, "Validator is already registered.");
-
-        validators.push(Validator({
-            validatorAddress: msg.sender,
-            stake: 0, // Initial stake is set to 0
-            voteCount: 0,
-            isActive: true
-        }));
-
-        // The index is the position in the array, adjusted for 1-based indexing
-        validatorIndexes[msg.sender] = validators.length;
-        emit ValidatorRegistered(msg.sender);
+    function depositStake() external payable {
+        require(msg.value >= minimumStakeRequirement, "Deposit does not meet the minimum stake requirement.");
+        stakes[msg.sender] += msg.value;
+        emit StakeDeposited(msg.sender, msg.value);
     }
 
-    // Unregister a validator
-    function unregisterValidator() external onlyValidator {
-        uint256 index = validatorIndexes[msg.sender] - 1;
-        validators[index].isActive = false;
-        emit ValidatorUnregistered(msg.sender);
+    function withdrawStake(uint256 amount) external {
+        require(stakes[msg.sender] >= amount, "Insufficient stake to withdraw.");
+        stakes[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
+        emit StakeWithdrawn(msg.sender, amount);
     }
 
-    // Vote for a validator
-    function voteForValidator(address validatorAddress) external {
-        require(validatorIndexes[validatorAddress] != 0, "Validator does not exist.");
+    function voteForDelegate(address _delegate, uint256 _votes) external {
+        require(delegates[_delegate].isDelegate, "Not a valid delegate.");
+        require(_votes <= stakes[msg.sender], "Voting more than staked amount.");
+
+        if (voterToDelegate[msg.sender] != address(0)) {
+            revokeVote(voterToDelegate[msg.sender]);
+        }
+
+        voterToDelegate[msg.sender] = _delegate;
+        delegates[_delegate].voteCount += _votes;
+        emit VoteCasted(msg.sender, _delegate, _votes);
+    }
+
+    function revokeVote(address _delegate) public {
+        require(voterToDelegate[msg.sender] == _delegate, "You did not vote for this delegate.");
         
-        // Update the voter's choice
-        votes[msg.sender] = validatorAddress;
+        uint256 votesToRevoke = stakes[msg.sender];
+        delegates[_delegate].voteCount -= votesToRevoke;
+        emit VoteRevoked(msg.sender, _delegate, votesToRevoke);
 
-        // Increment the validator's vote count
-        uint256 index = validatorIndexes[validatorAddress] - 1;
-        validators[index].voteCount += 1;
-        emit ValidatorVoted(msg.sender, validatorAddress, validators[index].voteCount);
-    }
-
-    // List all validators
-    function listValidators() external view returns (Validator[] memory) {
-        return validators;
+        voterToDelegate[msg.sender] = address(0); // Reset the voter's delegate
     }
 }
