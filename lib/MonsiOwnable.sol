@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Ownable {
+contract MonsiOwnable {
     address private _owner;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -16,12 +16,16 @@ contract Ownable {
     }
 
     modifier onlyOwner() {
-        require(owner() == msg.sender, "Ownable: caller is not the owner");
+        require(isOwner(), "Caller is not the owner");
         _;
     }
 
+    function isOwner() public view returns (bool) {
+        return msg.sender == _owner;
+    }
+
     function transferOwnership(address newOwner) public onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        require(newOwner != address(0), "New owner cannot be the zero address");
         emit OwnershipTransferred(_owner, newOwner);
         _owner = newOwner;
     }
