@@ -3,306 +3,154 @@ MonsiBlockchain/
 │   ├── core_protocol/
 │   │   ├── consensus_mechanisms/
 │   │   │   ├── AI_Adaptive_Consensus.sol
-│   │   │   │   // AI-driven adaptive consensus mechanism optimizing parameters for efficiency and security.
 │   │   │   ├── HybridConsensus.sol
-│   │   │   │   // Combines DPoS and PoW for a balanced, secure, and efficient consensus model.
 │   │   │   ├── DPoSContracts.sol
-│   │   │   │   // Implementation of Delegated Proof of Stake for fast and democratic consensus.
 │   │   │   ├── DPoWContracts.sol
-│   │   │   │   // Dynamic Proof of Work mechanism that adjusts difficulty based on network conditions.
 │   │   │   ├── DPoAContracts.sol
-│   │   │   │   // Proof of Authority with dynamic validator selection based on reputation and stake.
 │   │   │   ├── PoHContracts.sol
-│   │   │   │   // Proof of History contract ensuring chronological order with minimal computational resources.
 │   │   │   ├── PoRContracts.sol
-│   │   │   │   // Proof of Reputation leveraging validator history for consensus rights allocation.
 │   │   │   ├── PoBContracts.sol
-│   │   │   │   // Proof of Burn for stake commitment and network security enhancement.
 │   │   │   ├── DynamicStakingConsensus.sol
-│   │   │   ├── // Introduces a variable staking model where validator rewards and requirements are adjusted based on network conditions and participation rates.
-│   │   │   │
-│   │   │   ├── AdditionalModels/
-│   │   │   ├── ProofOfHistory.sol
-│   │   │   │   // Incorporates time verification into the consensus process, allowing for sequential transaction history verification without intensive computational resources.
-│   │   │   ├── ProofOfReputation.sol
-│   │   │   │   // Utilizes validator reputation scores to allocate consensus rights, prioritizing reliability and network contribution.
-│   │   │   ├── FederatedConsensusAI.sol
-│   │   │   └── // Employs a federated group of nodes selected through AI analysis for decision-making, reducing the number of participants needed for consensus and enhancing transaction throughput.
-│   │   │ 
+│   │   │   └── AdditionalModels/
+│   │   │       ├── ProofOfHistory.sol
+│   │   │       ├── ProofOfReputation.sol
+│   │   │       └── FederatedConsensusAI.sol
 │   │   ├── validator_management/
 │   │   │   ├── ValidatorRegistry.sol
-│   │   │   │   // Manages the registry of validators, including adding and removing validators.
 │   │   │   ├── ValidatorRegistration.sol
-│   │   │   │   // Handles the process for validators to register, requiring a stake or other criteria.
 │   │   │   ├── StakingRewardsDynamic.sol
-│   │   │   │   // New dynamic system for calculating and distributing staking rewards based on various factors.
-│   │   │   ├── StakingRewards.sol
-│   │   │   │   // Calculates and distributes staking rewards to validators based on fixed parameters.
 │   │   │   ├── ValidatorPenalty.sol
-│   │   │   │   // Implements penalty mechanisms for validators who fail to meet their obligations.
-│   │   │   └── ValidatorVoting.sol
-│   │   │       // Enables validators to vote on various proposals affecting the blockchain governance or operations.
-│   │   │  
-│   │   │  
+│   │   │   ├── ValidatorVoting.sol
+│   │   │   └── ValidatorPerformanceTracking.sol
 │   │   ├── sharding_control/
 │   │   │   ├── ShardingManagerAI.sol
-│   │   │   │   // AI-driven sharding manager optimizes shard allocation and load balancing in real-time.
 │   │   │   ├── ShardingManager.sol
-│   │   │   │   // Central hub for managing the lifecycle and operations of shards within the Monsi Blockchain.
 │   │   │   ├── ShardCreation.sol
-│   │   │   │   // Handles the initialization and setup of new shards, including the distribution of data and responsibilities.
 │   │   │   ├── ShardManagement.sol
-│   │   │   │   // Provides tools for ongoing management of shards, including resizing, merging, and splitting shards as needed.
 │   │   │   └── ShardRegistry.sol
-│   │   │       // Keeps a registry of all active shards, including their validators, state, and any specific configurations.
-│   │   │ 
-│   │   │ 
 │   │   ├── cross_shard_communication/
 │   │   │   ├── CrossShardRouter.sol
-│   │   │   │   // Coordinates the routing of transactions and messages between shards, ensuring data integrity and consistency.
 │   │   │   ├── InterShardMessage.sol
-│   │   │   │   // Handles the creation, validation, and execution of messages sent between shards.
 │   │   │   ├── CrossShardTransaction.sol
-│   │   │   │   // Manages transactions that span across multiple shards, coordinating execution and state changes.
 │   │   │   └── CrossShardMessagingQueue.sol
-│   │   │       // Implements a queue system for managing inter-shard messages efficiently, ensuring they are processed in a timely and orderly manner.
-│   │   │ 
-│   │   ├── cross_chain_interoperability/
-│   │   │   ├── CrossChainManager.sol
-│   │   │   │   // Central controller for managing cross-chain interactions, serving as the gateway for initiating and responding to cross-chain requests.
-│   │   │   ├── AssetLocking.sol
-│   │   │   │   // Manages the locking of assets on MonsiBlockchain before cross-chain transactions, ensuring assets are securely held during the transfer process.
-│   │   │   ├── AssetRelease.sol
-│   │   │   │   // Handles the release of locked assets on MonsiBlockchain upon successful completion of cross-chain transactions, ensuring assets are transferred to the correct party.
-│   │   │   ├── InteroperabilityVerification.sol
-│   │   │   │   // Provides mechanisms for verifying transaction integrity and authenticity across chains, using cryptographic proofs and consensus data from involved networks.
-│   │   │   ├── AtomicSwapManager.sol
-│   │   │   │   // Facilitates trustless atomic swaps between MonsiBlockchain and other blockchains, allowing for direct asset exchanges without intermediaries.
-│   │   │   ├── CrossChainEventEmitter.sol
-│   │   │   │   // New - Emits events for cross-chain activities, making it easier for external observers to track and react to cross-chain transactions.
-│   │   │   ├── CrossChainOracle.sol
-│   │   │   │   // New - Integrates with oracles for real-time data verification across chains, enhancing the reliability of cross-chain information.
-│   │   │   └── CrossChainStateSync.sol
-│   │   │       // New - Manages the synchronization of state across blockchain networks, ensuring consistency and coherency of shared data.
-│   │   │ 
-│   │   │ 
+│   │   └── cross_chain_interoperability/
+│   │       ├── CrossChainManager.sol
+│   │       ├── AssetLocking.sol
+│   │       ├── AssetRelease.sol
+│   │       ├── InteroperabilityVerification.sol
+│   │       ├── AtomicSwapManager.sol
+│   │       ├── CrossChainEventEmitter.sol
+│   │       ├── CrossChainOracle.sol
+│   │       └── CrossChainStateSync.sol
 │   ├── security_compliance/
 │   │   ├── Quantum_Resistant_Cryptography.sol
-│   │   │   // Implements advanced cryptographic algorithms resilient against quantum computing threats.
 │   │   ├── Zero_Knowledge_Proofs.sol
-│   │   │   // Enables privacy-preserving transactions and interactions using zero-knowledge proofs.
 │   │   ├── identity_access_management/
 │   │   │   ├── IdentityManager.sol
 │   │   │   ├── UserIdentity.sol
 │   │   │   ├── AccessControl.sol
 │   │   │   ├── MultiFactorAuthentication.sol
-│   │   │   │   // Enhances account security with multiple authentication methods.
 │   │   │   └── PrivacyPreservingCredentialVerification.sol
-│   │   │       // Allows for the verification of credentials without revealing underlying data.
 │   │   ├── AutomatedSecurityAuditing.sol
-│   │   │   // Conducts automatic audits to identify and mitigate vulnerabilities.
 │   │   ├── SecurityEventLogging.sol
-│   │   │   // Logs security-related events for audit and compliance purposes.
 │   │   ├── ComplianceRegistry.sol
-│   │   │   // Keeps a record of compliance checks and standards adherence.
 │   │   ├── security_audit/
 │   │   │   ├── SecurityAuditCoordinator.sol
-│   │   │   │   // Coordinates the entire audit process, acting as a bridge between auditors and the blockchain.
 │   │   │   ├── AuditRequest.sol
-│   │   │   │   // Manages requests for security audits, including submission and tracking.
 │   │   │   └── AuditVerification.sol
-│   │   │       // Verifies the results of security audits, ensuring that all identified issues have been addressed.
 │   │   └── quantum_resistant_upgrades/
-│   │   │   ├── QuantumUpgradeManager.sol
-│   │   │   │   // Manages the upgrade process for implementing quantum-resistant technologies.
-│   │   │   ├── UpgradeProposal.sol
-│   │   │   │   // Allows for the proposal of upgrades, including quantum-resistant features, for community review.
-│   │   │   └── UpgradeExecution.sol
-│   │   │       // Executes approved upgrade proposals, ensuring the blockchain stays ahead of potential quantum threats.
-│   │   │
+│   │       ├── QuantumUpgradeManager.sol
+│   │       ├── UpgradeProposal.sol
+│   │       └── UpgradeExecution.sol
 │   ├── governance_community/
 │   │   ├── Voting_System.sol
-│   │   │   // Implements a robust and flexible voting system for governance decisions, enabling token holders and validators to vote on proposals.
 │   │   ├── Proposal_Management.sol
-│   │   │   // Manages the lifecycle of governance proposals, from submission to final decision, ensuring transparency and participation.
 │   │   ├── Governance.sol
-│   │   │   // Central governance contract that orchestrates the governance process, integrating voting, proposal management, and governance policies.
 │   │   ├── treasury_management/
 │   │   │   ├── Treasury.sol
-│   │   │   │   // Holds and manages the blockchain's native tokens and other assets, serving as the financial backbone for the ecosystem.
 │   │   │   ├── FundingAllocation.sol
-│   │   │   │   // Determines and manages the allocation of funds for projects, development, and community initiatives, based on governance decisions.
 │   │   │   └── TreasuryDistribution.sol
-│   │   │       // Handles the distribution of funds from the treasury to approved projects and proposals, ensuring transparency and accountability.
 │   │   └── dispute_resolution/
-│   │   │   ├── DisputeResolution.sol
-│   │   │   │   // Provides a framework for resolving disputes within the community, ranging from contract interpretations to proposal outcomes.
-│   │   │   ├── ArbitrationSystem.sol
-│   │   │   │   // New - Implements an arbitration system for disputes that require formal resolution, integrating with external arbitration services if necessary.
-│   │   │   └── CommunityMediation.sol
-│   │   │       // New - Facilitates community-driven mediation processes for resolving disputes informally, promoting consensus and understanding.
-│   │   │ 
+│   │       ├── DisputeResolution.sol
+│   │       ├── ArbitrationSystem.sol
+│   │       └── CommunityMediation.sol
 │   ├── token_economics/
 │   │   ├── Monsi.sol
-│   │   │   // The native coin of the Monsi Blockchain, acting as the primary medium of exchange, governance, and incentive mechanism.
 │   │   ├── Minting.sol
-│   │   │   // Manages the minting of new Monsi coins, governed by predefined rules or community governance decisions to ensure sustainable growth.
 │   │   ├── Burning.sol
-│   │   │   // Facilitates the burning of Monsi coins, used as a mechanism for regulating supply and supporting value stability.
 │   │   ├── StakingRewards.sol
-│   │   │   // New - Allocates Monsi coins as rewards for validators and participants securing the network, promoting network integrity and participation.
 │   │   ├── TokenEconomicsPolicy.sol
-│   │   │   // New - Defines the overarching economic policies governing Monsi coin issuance, staking, rewards, and burning, ensuring long-term sustainability.
 │   │   ├── LiquidityProvision.sol
-│   │   │   // New - Encourages liquidity provision to decentralized exchanges (DEXs) and other liquidity pools, rewarding participants with Monsi coins.
 │   │   └── InflationControlMechanism.sol
-│   │       // New - Dynamically adjusts minting and burning rates based on economic indicators to manage inflation and maintain the coin's purchasing power.
-│   │   │ 
 │   ├── utility_services/
 │   │   ├── Wallet.sol
-│   │   │   // Facilitates the secure management of Monsi coins and other assets, integrating features like multi-signature security and transaction history.
 │   │   ├── PaymentGateway.sol
-│   │   │   // Enables seamless transactions within the MonsiBlockchain ecosystem and with external parties, supporting a variety of payment models.
 │   │   ├── OracleService.sol
-│   │   │   // Connects real-world data to the blockchain, enabling smart contracts to interact with external information and events accurately.
 │   │   ├── FeeManagement.sol
-│   │   │   // New - Dynamically adjusts transaction fees based on network congestion, transaction complexity, and other factors to ensure fairness and efficiency.
 │   │   └── DataStorage.sol
-│   │       // New - Offers decentralized data storage solutions, enabling dApps to securely store and retrieve data off-chain when necessary.
-│   │   
 │   └── dapps_integration/
 │       ├── DAppRegistry.sol
-│       │   // Maintains a registry of deployed dApps on the MonsiBlockchain, facilitating discovery and interaction among users and developers.
 │       ├── NFTMarketplace.sol
-│       │   // Supports the creation, sale, and exchange of non-fungible tokens (NFTs), tapping into the growing market for digital collectibles and assets.
 │       ├── DecentralizedExchange.sol
-│       │   // Enables trustless trading of Monsi coins and other tokens, supporting liquidity and price discovery within the ecosystem.
 │       ├── VotingPlatform.sol
-│       │   // New - Facilitates community voting on various aspects, from governance decisions to dApp features, enhancing democratic participation.
 │       └── CrowdfundingPlatform.sol
-│           // New - Supports the launch and funding of blockchain projects directly within the MonsiBlockchain, encouraging innovation and community support.
-│
-├── docs/
-│   ├── Whitepaper.md
-│   │   // Provides a comprehensive overview of the MonsiBlockchain, including its vision, core features, technical innovations, and the problems it aims to solve within the blockchain space.
-│   ├── Development_Plan.md
-│   │   // Outlines the roadmap and milestones for the MonsiBlockchain development, including planned features, upgrades, and community engagement strategies.
-│   ├── API_Documentation.md
-│   │   // Offers detailed descriptions of the APIs available for developers, including endpoints, request/response formats, and examples for integrating with the MonsiBlockchain.
-│   ├── ArchitectureOverview.md
-│   │   // Presents a high-level view of the MonsiBlockchain's architecture, covering its consensus mechanisms, network structure, smart contract system, and security measures.
-│   ├── TechnicalDocumentation.md
-│   │   // Delivers in-depth technical information on the MonsiBlockchain, including smart contract specifications, network protocols, and security algorithms.
-│   └── DeveloperGuide.md
-│       // Provides practical guidance for developers looking to build on the MonsiBlockchain, including setup instructions, development tools, best practices, and sample code.
-│
-├── test/
-│   ├── unit_tests/
-│   │   ├── TestDPoS.sol
-│   │   │   // Tests the Delegated Proof of Stake (DPoS) consensus mechanism, ensuring validator selection, staking, and voting processes work as expected.
-│   │   ├── TestValidatorRegistration.sol
-│   │   │   // Validates the registration process for validators, including staking requirements and the handling of invalid submissions.
-│   │   ├── TestShardCreation.sol
-│   │   │   // Ensures that shards are created correctly with the right initial parameters and that shard division follows the intended logic.
-│   │   ├── TestInterShardMessage.sol
-│   │   │   // Verifies that messages between shards are correctly formatted, sent, and received, with integrity and security intact.
-│   │   └── TestAssetLocking.sol
-│   │       // Confirms that assets are securely locked during cross-chain or cross-shard transactions and only released under the correct conditions.
-│   │
-│   └── integration_tests/
-│       └── IntegrationTests.sol
-│           // Conducts comprehensive tests that cover the interaction between various MonsiBlockchain components, such as cross-shard transactions, consensus mechanisms, and smart contract executions, to ensure cohesive system behavior.
-│
-├── scripts/
-│   ├── Deployment_Scripts/
-│   │   ├── SetupLocalEnvironment.js
-│   │   │   // Initializes a local blockchain environment for development and testing, configuring mock nodes and test accounts.
-│   │   ├── SeedTestData.js
-│   │   │   // Populates the local blockchain environment with test data, including pre-defined accounts, token balances, and smart contract deployments.
-│   │   ├── DeploymentScript.js
-│   │   │   // Automates the deployment of smart contracts to local, testnet, or mainnet environments, handling migrations and initial setup.
-│   │   └── InteractionScript.js
-│   │       // Provides a set of utilities for interacting with deployed contracts, facilitating tasks such as querying contract states, invoking functions, and simulating transactions.
-│   │
-│   └── Security_Audit_Tools/
-│       └── AuditTools.js
-│           // Integrates or provides utilities for conducting automated security audits on smart contracts, leveraging existing tools and custom checks to identify vulnerabilities and compliance issues.
-├── migrations/
-│   ├── 1_initial_migration.js
-│   │   // Handles the initial deployment of the MonsiBlockchain infrastructure, setting up any foundational contracts or settings.
-│   └── 2_deploy_utilities.js
-│       // Focuses on deploying utility contracts that are essential for the MonsiBlockchain operation, such as Wallet, PaymentGateway, and OracleService.
-│   ├── helpers/
-│   │   ├── DeploymentHelper.js
-│   │   │   // Provides functions and utilities for deploying contracts within test environments or during development, simplifying the process of managing contract deployments.
-│   │   ├── TestSetupHelper.js
-│   │   │   // Assists in configuring the testing environment, including starting a local blockchain instance, deploying necessary contracts for testing, and initializing test accounts.
-│   │   ├── ContractHelper.sol
-│   │   │   // A Solidity helper that includes common contract interactions, utilities, and perhaps mock contracts for testing purposes.
-│   │   └── TestHelper.sol
-│           // Solidity-based utilities and functions designed to assist with contract testing, such as creating test scenarios, simulating conditions, or verifying contract states.
-│
-├── interfaces/
-│   ├── IMonsiService.sol
-│   │   // Defines the functions for core MonsiBlockchain services, ensuring compatibility and standardization across service implementations.
-│   ├── IValidator.sol
-│   │   // Outlines the functions related to validator operations, including staking, voting, and rewards, facilitating interaction with validator contracts.
-│   ├── IShard.sol
-│   │   // Specifies the interface for shard management, including functions for shard creation, data access, and cross-shard communication.
-│   └── ICrossChain.sol
-│       // Establishes a standard for cross-chain interaction, detailing functions for asset locking, transfer, and verification across blockchain networks.
-│
 ├── lib/
 │   ├── MonsiUtilities.sol
-│   │   // Contains general utility functions used across the MonsiBlockchain, such as address validations, string manipulations, and data conversions.
 │   ├── MonsiMathLib.sol
-│   │   // A math library offering safe mathematical operations (addition, subtraction, multiplication, division) with overflow checks, crucial for financial calculations.
 │   ├── MonsiSecurityLib.sol
-│   │   // Provides security-related functions, including hashing, signature verification, and encryption/decryption utilities to protect transactions and data.
 │   ├── MonsiOwnable.sol
-│   │   // Implements ownership and permission controls for contracts, enabling restricted access to certain functions and administrative operations.
 │   ├── MonsiAiLib.sol
-│   │   // Integrates AI-driven functions and models that can be utilized by various parts of the blockchain for predictive analytics, optimization, and decision-making.
 │   └── MonsiConsensusLib.sol
-│       // Focuses on consensus mechanism utilities, offering functions that support the implementation and management of the blockchain's consensus protocols.
-│
+├── interfaces/
+│   ├── IMonsiService.sol
+│   ├── IValidator.sol
+│   ├── IShard.sol
+│   └── ICrossChain.sol
+├── docs/
+│   ├── Whitepaper.md
+│   ├── Development_Plan.md
+│   ├── API_Documentation.md
+│   ├── ArchitectureOverview.md
+│   ├── TechnicalDocumentation.md
+│   └── DeveloperGuide.md
+├── test/
+│   ├── unit_tests/
+│   │   └── (Test files for each contract)
+│   └── integration_tests/
+│       └── IntegrationTests.sol
+├── scripts/
+│   ├── Deployment_Scripts/
+│   │   └── (Deployment and setup scripts)
+│   └── Security_Audit_Tools/
+│       └── AuditTools.js
+├── migrations/
+│   ├── 1_initial_migration.js
+│   └── 2_deploy_utilities.js
+├── helpers/
+│   ├── DeploymentHelper.js
+│   ├── TestSetupHelper.js
+│   ├── ContractHelper.sol
+│   └── TestHelper.sol
 ├── public/
 │   ├── index.html
-│   │   // The main HTML file serving as the entry point for the user interface. It provides the structural markup for the blockchain's web application.
 │   └── js/
 │       └── app.js
-│           // The primary JavaScript file that contains the logic for interacting with the MonsiBlockchain, such as sending transactions, querying contract states, and subscribing to events.
-│
 ├── server/
 │   ├── index.js
-│   │   // The main server file that initializes the server, sets up middleware, and handles routing. It's the entry point for the server application.
 │   └── api/
 │       └── blockchainApi.js
-│           // Defines the API endpoints that interact with the MonsiBlockchain, facilitating operations like sending transactions, querying contract states, and subscribing to blockchain events.
-│
 ├── config/
 │   ├── NetworkConfig.json
-│   │   // Defines network parameters such as RPC URLs, chain IDs, and network names for development, testing, and production.
 │   ├── ContractConfig.json
-│   │   // Specifies contract-specific parameters, like gas limits, constructor arguments, and addresses for deployed instances.
 │   ├── TruffleConfig.js
-│   │   // Configuration file for Truffle, setting up compilers, networks, and other deployment options.
 │   └── HardhatConfig.js
-│       // Hardhat configuration file, including network settings, solidity compiler versions, and plugin configurations.
-│
 ├── deployments/
 │   ├── scripts/
 │   │   ├── DeployToMainnet.js
-│   │   │   // Script to deploy contracts to the mainnet, including pre-deployment checks and post-deployment verifications.
 │   │   └── DeployToTestnet.js
-│   │       // Similar to DeployToMainnet.js but targeted for testnet deployments, useful for testing in a live network environment.
-│   │
 │   └── records/
 │       ├── DeploymentRecordMainnet.json
-│       │   // Records the details of mainnet deployments, such as contract addresses and deployment timestamps.
 │       └── DeploymentRecordTestnet.json
-│           // Keeps track of testnet deployment details, aiding in contract verification and interaction on test networks.
-│
 ├── .gitignore
 ├── README.md
 └── LICENSE
