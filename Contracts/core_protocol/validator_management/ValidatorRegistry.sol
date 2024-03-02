@@ -1,66 +1,97 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./MonsiOwnable.sol";
+import "./AccessControl.sol";
 
-contract ValidatorRegistry is MonsiOwnable {
+/**
+ * @title Validator Registry for MonsiBlockchain
+ * @dev Manages the registration, update, and removal of validators in the MonsiBlockchain ecosystem.
+ */
+contract ValidatorRegistry is AccessControl {
+    bytes32 public constant REGISTRAR_ROLE = keccak256("REGISTRAR_ROLE");
+
     struct Validator {
-        address validatorAddress;
-        string name;
-        string metadata; // Additional information, e.g., validator's website or contact info
+        address addr;
+        string metadata; // Metadata could include off-chain information like IP addresses or node names.
         bool isActive;
     }
 
-    // Mapping from validator addresses to their details
+    // Mapping from validator address to validator data
     mapping(address => Validator) public validators;
 
     // Event declarations
-    event ValidatorRegistered(address indexed validatorAddress, string name, string metadata);
-    event ValidatorUpdated(address indexed validatorAddress, string name, string metadata);
-    event ValidatorStatusChanged(address indexed validatorAddress, bool isActive);
+    event ValidatorAdded(address indexed validator, string metadata);
+    event ValidatorUpdated(address indexed validator, string newMetadata);
+    event ValidatorRemoved(address indexed validator);
+    event ValidatorStatusChanged(address indexed validator, bool isActive);
 
-    // Register a new validator
-    function registerValidator(address _validatorAddress, string memory _name, string memory _metadata) public onlyOwner {
-        require(_validatorAddress != address(0), "Invalid address");
-        require(!validators[_validatorAddress].isActive, "Validator already registered");
+    constructor() {
+        _grantRole(REGISTRAR_ROLE, msg.sender); // Grant the deployer the initial registrar role
+    }
 
-        validators[_validatorAddress] = Validator({
-            validatorAddress: _validatorAddress,
-            name: _name,
+    /**
+     * @dev Adds a new validator to the registry.
+     * @param _validator The address of the validator to add.
+     * @param _metadata Metadata associated with the validator.
+     */
+    function addValidator(address _validator, string memory _metadata) public onlyRole(REGISTRAR_ROLE) {
+        require(_validator != address(0), "ValidatorRegistry: validator address cannot be the zero address");
+        require(!validators[_validator].isActive, "ValidatorRegistry: validator already registered");
+
+        validators[_validator] = Validator({
+            addr: _validator,
             metadata: _metadata,
             isActive: true
         });
 
-        emit ValidatorRegistered(_validatorAddress, _name, _metadata);
+        emit ValidatorAdded(_validator, _metadata);
     }
 
-    // Update validator information
-    function updateValidator(address _validatorAddress, string memory _name, string memory _metadata) public onlyOwner {
-        require(_validatorAddress != address(0), "Invalid address");
-        require(validators[_validatorAddress].isActive, "Validator not found");
+    /**
+     * @dev Updates the metadata for an existing validator.
+     * @param _validator The address of the validator to update.
+     * @param _newMetadata The new metadata for the validator.
+     */
+    function updateValidator(address _validator, string memory _newMetadata) public onlyRole(REGISTRAR_ROLE) {
+        require(validators[_validator].isActive, "ValidatorRegistry: validator not found");
 
-        Validator storage validator = validators[_validatorAddress];
-        validator.name = _name;
-        validator.metadata = _metadata;
+        validators[_validator].metadata = _newMetadata;
 
-        emit ValidatorUpdated(_validatorAddress, _name, _metadata);
+        emit ValidatorUpdated(_validator, _newMetadata);
     }
 
-    // Change validator's active status
-    function setValidatorStatus(address _validatorAddress, bool _isActive) public onlyOwner {
-        require(_validatorAddress != address(0), "Invalid address");
-        require(validators[_validatorAddress].isActive != _isActive, "Status already set as desired");
+    /**
+     * @dev Removes a validator from the registry.
+     * @param _validator The address of the validator to remove.
+     */
+    function removeValidator(address _validator) public onlyRole(REGISTRAR_ROLE) {
+        require(validators[_validator].isActive, "ValidatorRegistry: validator not found");
 
-        validators[_validatorAddress].isActive = _isActive;
+        validators[_validator].isActive = false;
 
-        emit ValidatorStatusChanged(_validatorAddress, _isActive);
+        emit ValidatorRemoved(_validator);
     }
 
-    // Retrieve validator details
-    function getValidator(address _validatorAddress) public view returns (Validator memory) {
-        require(_validatorAddress != address(0), "Invalid address");
-        require(validators[_validatorAddress].isActive, "Validator not found");
+    /**
+     * @dev Changes the active status of a validator.
+     * @param _validator The address of the validator.
+     * @param _isActive The new active status.
+     */
+    function setValidatorStatus(address _validator, bool _isActive) public onlyRole(REGISTRAR_ROLE) {
+        require(validators[_validator].addr != address(0), "ValidatorRegistry: validator not found");
 
-        return validators[_validatorAddress];
+        validators[_validator].isActive = _isActive;
+
+        emit ValidatorStatusChanged(_validator, _isActive);
+    }
+
+    /**
+     * @dev Returns the validator data for a given address.
+     * @param _validator The address of the validator.
+     * @return The validator data.
+     */
+    function getValidator(address _validator) public view returns (Validator memory) {
+        require(validators[_validator].isActive, "ValidatorRegistry: validator not found");
+        return validators[_validator];
     }
 }
